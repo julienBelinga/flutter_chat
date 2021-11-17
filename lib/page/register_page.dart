@@ -1,3 +1,4 @@
+import 'dart:developer' as developper;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
@@ -31,8 +32,8 @@ class _RegisterPageState extends State<RegisterPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-              OutlinedButton(onPressed: (){}, child: const Text('login')),
-              ElevatedButton(onPressed: (){}, child: const Text('sign up')),
+              OutlinedButton(onPressed: ()=> Navigator.of(context).pushNamed("/login"), child: const Text('login')),
+              ElevatedButton(onPressed: _register, child: const Text('sign up')),
             ],),
           ],
         ),
@@ -41,10 +42,10 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void register() async{
-    String username = tecUsername.text;
-    String email = tecEmail.text;
-    String password = tecPassword.text;
+  _register() async{
+    String username = tecUsername.text.trim();
+    String email = tecEmail.text.trim();
+    String password = tecPassword.text.trim();
 
     Response response = await http.post(
         Uri.parse("https://flutter-learning.mooo.com/auth/local/register"),
@@ -54,5 +55,11 @@ class _RegisterPageState extends State<RegisterPage> {
           "password" : password,
         }
     );
+    if(response.statusCode == 200){
+      developper.log("Register done with sucess ${response.statusCode}");
+    }else{
+      developper.log("Register done with error ${response.statusCode}");
+    }
+
   }
 }
